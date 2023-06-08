@@ -1,6 +1,9 @@
 export enum UserRoles {
+  // eslint-disable-next-line no-unused-vars
   Student,
+  // eslint-disable-next-line no-unused-vars
   Faculty,
+  // eslint-disable-next-line no-unused-vars
   Admin,
 }
 

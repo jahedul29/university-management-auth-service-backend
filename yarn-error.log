@@ -1,30 +1,30 @@
 Arguments: 
-  /Users/macbookpro/.nvm/versions/node/v16.14.2/bin/node /usr/local/bin/yarn add -D prettire
+  /Users/macbookpro/.nvm/versions/node/v12.22.3/bin/node /usr/local/bin/yarn add winstone
 
 PATH: 
-  /Users/macbookpro/.nvm/versions/node/v16.14.2/bin:/Users/macbookpro/.docker/bin:/Users/macbookpro/.nvm/versions/node/v12.22.3/bin:/Users/macbookpro/.nvm/versions/node/v12.22.3/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/macbookpro/.docker/bin:/Users/macbookpro/.nvm/versions/node/v12.22.3/bin:/Users/macbookpro/Library/Android/sdk/emulator:/Users/macbookpro/Library/Android/sdk/platform-tools:/Users/macbookpro/Downloads/apache-maven-3.9.2/bin:/Users/macbookpro/Library/Android/sdk/emulator:/Users/macbookpro/Library/Android/sdk/platform-tools:/Users/macbookpro/Downloads/apache-maven-3.9.2/bin
+  /Users/macbookpro/.docker/bin:/Users/macbookpro/.nvm/versions/node/v12.22.3/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Users/macbookpro/Library/Android/sdk/emulator:/Users/macbookpro/Library/Android/sdk/platform-tools:/Users/macbookpro/Downloads/apache-maven-3.9.2/bin
 
 Yarn version: 
   1.22.18
 
 Node version: 
-  16.14.2
+  12.22.3
 
 Platform: 
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/prettire: Not found
+  Error: https://registry.yarnpkg.com/winstone: Not found
       at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:66138:18)
       at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:140883:22)
-      at Request.emit (node:events:526:28)
+      at Request.emit (events.js:314:20)
       at Request.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141855:10)
-      at Request.emit (node:events:526:28)
+      at Request.emit (events.js:314:20)
       at IncomingMessage.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:141777:12)
-      at Object.onceWrapper (node:events:645:28)
-      at IncomingMessage.emit (node:events:538:35)
-      at endReadableNT (node:internal/streams/readable:1345:12)
-      at processTicksAndRejections (node:internal/process/task_queues:83:21)
+      at Object.onceWrapper (events.js:420:28)
+      at IncomingMessage.emit (events.js:326:22)
+      at endReadableNT (_stream_readable.js:1241:12)
+      at processTicksAndRejections (internal/process/task_queues.js:84:21)
 
 npm manifest: 
   {
@@ -38,6 +38,7 @@ npm manifest:
       "lint:check": "eslint --ignore-path .eslintignore --ext .js,.ts .",
       "lint:fix": "eslint . --fix",
       "prettier:check": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
+      "prettier:fix": "prettier --write .",
       "lint-prettier": "yarn lint:check && yarn prettier:check"
     },
     "lint-staged": {
@@ -50,8 +51,10 @@ npm manifest:
       "@typescript-eslint/parser": "^5.59.8",
       "dotenv": "^16.1.1",
       "eslint": "^8.41.0",
+      "eslint-config-prettier": "^8.8.0",
       "husky": "^8.0.3",
       "lint-staged": "^13.2.2",
+      "prettier": "^2.8.8",
       "ts-node-dev": "^2.0.0",
       "typescript": "^5.0.4"
     },
@@ -782,6 +785,11 @@ Lockfile:
     version "4.0.0"
     resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-4.0.0.tgz#14ba83a5d373e3d311e5afca29cf5bfad965bf34"
     integrity sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==
+  
+  eslint-config-prettier@^8.8.0:
+    version "8.8.0"
+    resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.8.0.tgz#bfda738d412adc917fd7b038857110efe98c9348"
+    integrity sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==
   
   eslint-scope@^5.1.1:
     version "5.1.1"
@@ -1674,6 +1682,11 @@ Lockfile:
     version "1.2.1"
     resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
     integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
+  
+  prettier@^2.8.8:
+    version "2.8.8"
+    resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.8.tgz#e8c5d7e98a4305ffe3de2e1fc4aca1a71c28b1da"
+    integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
   
   proxy-addr@~2.0.7:
     version "2.0.7"
