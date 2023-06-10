@@ -1,6 +1,7 @@
 import path from 'path';
 import { createLogger, format, transports } from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+import config from '../config';
 const { combine, timestamp, label, printf, colorize } = format;
 
 const myFormat = printf(({ level, message, label, timestamp }) => {
@@ -19,6 +20,22 @@ const logger = createLogger({
     new transports.Console({
       format: combine(colorize(), myFormat),
     }),
+  ],
+});
+
+const errorLogger = createLogger({
+  level: 'error',
+  format: combine(label({ label: 'UM' }), timestamp(), myFormat, colorize()),
+  defaultMeta: { service: 'user-service' },
+  transports: [
+    new transports.Console({
+      format: combine(colorize(), myFormat),
+    }),
+  ],
+});
+
+if (config.env == 'production') {
+  logger.add(
     new DailyRotateFile({
       filename: path.join(
         process.cwd(),
@@ -31,18 +48,9 @@ const logger = createLogger({
       zippedArchive: true,
       maxSize: '20m',
       maxFiles: '14d',
-    }),
-  ],
-});
-
-const errorLogger = createLogger({
-  level: 'error',
-  format: combine(label({ label: 'UM' }), timestamp(), myFormat, colorize()),
-  defaultMeta: { service: 'user-service' },
-  transports: [
-    new transports.Console({
-      format: combine(colorize(), myFormat),
-    }),
+    })
+  );
+  errorLogger.add(
     new DailyRotateFile({
       filename: path.join(
         process.cwd(),
@@ -55,8 +63,8 @@ const errorLogger = createLogger({
       zippedArchive: true,
       maxSize: '20m',
       maxFiles: '14d',
-    }),
-  ],
-});
+    })
+  );
+}
 
 export { logger, errorLogger };

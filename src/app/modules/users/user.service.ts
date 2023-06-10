@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import { IUser } from './users.interface';
-import User from './users.model';
+import { IUser } from './user.interface';
+import User from './user.model';
 
-export const getLastUserId = async (): Promise<string> => {
+const getLastUserId = async (): Promise<string> => {
   const collectionExists =
     mongoose.connection.readyState === 1 &&
     mongoose.connection.collections.user;
@@ -14,7 +14,12 @@ export const getLastUserId = async (): Promise<string> => {
   }
 };
 
-export const saveUserToDb = async (user: IUser): Promise<IUser | null> => {
+const saveUserToDb = async (user: IUser): Promise<IUser | null> => {
   const savedUser = await User.create(user);
   return savedUser;
+};
+
+export const UserService = {
+  getLastUserId,
+  saveUserToDb,
 };
