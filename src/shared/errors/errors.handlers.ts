@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import { ZodError, ZodIssue } from 'zod';
 import {
   IGenericErrorMessage,
   IGenericErrorResponse,
 } from './errors.interfaces';
 
-export const handleValidationError = (
+const handleValidationError = (
   err: mongoose.Error.ValidationError
 ): IGenericErrorResponse => {
   const errors: IGenericErrorMessage[] = Object.values(err.errors).map(el => {
@@ -18,4 +19,24 @@ export const handleValidationError = (
     message: err.message,
     errorMessages: errors,
   };
+};
+
+const handleZodError = (err: ZodError): IGenericErrorResponse => {
+  const errors: IGenericErrorMessage[] = err.issues.map((issue: ZodIssue) => {
+    return {
+      path: issue.path[issue.path.length - 1],
+      message: issue.message,
+    };
+  });
+
+  return {
+    statusCode: 400,
+    message: 'Validation Error',
+    errorMessages: errors,
+  };
+};
+
+export const ErrorHandler = {
+  handleValidationError,
+  handleZodError,
 };
