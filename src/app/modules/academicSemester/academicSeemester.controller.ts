@@ -21,14 +21,14 @@ const createAcademicSemester: RequestHandler = catchAsync(
       academicSemeester
     );
 
-    next();
-
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
       message: 'Academic semester saved successfully',
       data: savedData,
     });
+
+    next();
   }
 );
 

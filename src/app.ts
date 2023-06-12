@@ -1,5 +1,6 @@
 import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status';
 import { globalErrorHandling } from './app/middlewares/gobalErrorHandling.middleware';
 import appRouter from './app/routes';
 
@@ -26,4 +27,19 @@ app.use('/api/v1', appRouter);
 //middlewars
 app.use(globalErrorHandling);
 
+//not found route
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(httpStatus.NOT_FOUND).json({
+    succeess: false,
+    message: `${req.originalUrl} route not found`,
+    errorMessages: [
+      {
+        path: req.originalUrl,
+        message: `${req.originalUrl} route not found`,
+      },
+    ],
+  });
+
+  next();
+});
 export default app;

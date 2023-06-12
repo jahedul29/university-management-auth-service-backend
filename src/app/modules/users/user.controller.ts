@@ -13,14 +13,14 @@ const createUser = catchAsync(
     user.id = generateUserId(lastUserId, user.role);
     const savedUser = await UserService.saveUserToDb(user);
 
-    next();
-
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
       message: 'User saved successfully',
       data: savedUser,
     });
+
+    next();
   }
 );
 
