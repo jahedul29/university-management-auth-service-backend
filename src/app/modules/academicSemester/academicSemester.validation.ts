@@ -14,7 +14,7 @@ export const createAcademicSemesterZodSchema = z.object({
     code: z.enum([...academicSemesterCodes] as [string, ...string[]], {
       required_error: 'code is required',
     }),
-    year: z.string({
+    year: z.number({
       required_error: 'year is requirec',
     }),
     startMonth: z.enum([...academicSemesterMonths] as [string, ...string[]], {

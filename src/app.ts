@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import { globalErrorHandling } from './app/middlewares/gobalErrorHandling.middleware';
-import { UserRouters } from './app/modules/users/user.route';
+import appRouter from './app/routes';
 
 const app: Application = express();
 
@@ -21,7 +21,7 @@ app.get('/api/v1', async (req: Request, res: Response, next: NextFunction) => {
 });
 
 // app routes
-app.use('/api/v1/users', UserRouters);
+app.use('/api/v1', appRouter);
 
 //middlewars
 app.use(globalErrorHandling);
