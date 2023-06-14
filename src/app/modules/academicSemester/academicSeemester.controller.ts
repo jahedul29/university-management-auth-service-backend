@@ -5,6 +5,7 @@ import { sendResponse } from '../../../shared/sendResponse';
 import { AcademicSemesterService } from './academicSemester.service';
 
 const createAcademicSemester: RequestHandler = catchAsync(
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
     const academicSemester = req.body;
 
@@ -18,8 +19,6 @@ const createAcademicSemester: RequestHandler = catchAsync(
       message: 'Academic semester saved successfully',
       data: savedData,
     });
-
-    next();
   }
 );
 
@@ -56,8 +55,25 @@ const updateSemester: RequestHandler = catchAsync(
   }
 );
 
+const deleteSemester: RequestHandler = catchAsync(
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+
+    const result = await AcademicSemesterService.deleteSemester(id);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Academic semester deleted successfully',
+      data: result,
+    });
+  }
+);
+
 export const AcademicSemesterController = {
   createAcademicSemester,
   getSingleSemester,
   updateSemester,
+  deleteSemester,
 };
