@@ -33,15 +33,15 @@ async function bootstrap() {
     errorLogger.error('Failed to connect database', err);
   }
 
-  process.on('unhandledRejection', function (error) {
+  process.on('unhandledRejection', async function (error) {
     errorLogger.error(error);
     closeServer();
   });
 }
 
+bootstrap();
+
 process.on('SIGTERM', () => {
   logger.info('SIGTERM process detected');
   closeServer();
 });
-
-bootstrap();

@@ -36,8 +36,8 @@ const getAllUsers = async (
     sortCondition[sortBy] = sortOrder;
   }
 
-  // working on searching
-  const { searchTerm } = filters;
+  // working on filtering
+  const { searchTerm, ...filterData } = filters;
   const andConditions = [];
   let filterCondition = {};
   const searchableFields: string[] = ['email'];
@@ -49,6 +49,16 @@ const getAllUsers = async (
           $regex: searchTerm,
           $options: 'i',
         },
+      })),
+    });
+
+    filterCondition = { $and: andConditions };
+  }
+
+  if (Object.keys(filterData).length) {
+    andConditions.push({
+      $and: Object.entries(filterData).map(([field, value]) => ({
+        [field]: value,
       })),
     });
 
