@@ -21,7 +21,7 @@ const createSemester = async (
 const getSingleSemester = async (
   id: string
 ): Promise<IAcademicSemester | null> => {
-  const result = AcademicSemester.findById(id);
+  const result = await AcademicSemester.findById(id);
   return result;
 };
 
@@ -37,7 +37,7 @@ const updateSemester = async (
     throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid semester code');
   }
 
-  const result = AcademicSemester.findOneAndUpdate({ _id: id }, payload, {
+  const result = await AcademicSemester.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   });
   return result;
@@ -46,7 +46,7 @@ const updateSemester = async (
 const deleteSemester = async (
   id: string
 ): Promise<IAcademicSemester | null> => {
-  const result = AcademicSemester.findByIdAndDelete(id);
+  const result = await AcademicSemester.findByIdAndDelete(id);
   return result;
 };
 
