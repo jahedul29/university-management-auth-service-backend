@@ -1,3 +1,4 @@
+import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import { ZodError, ZodIssue } from 'zod';
 import {
@@ -36,7 +37,22 @@ const handleZodError = (err: ZodError): IGenericErrorResponse => {
   };
 };
 
+const handleSimplifiedError = (err: mongoose.Error.CastError) => {
+  const errors = [
+    {
+      path: err.path,
+      message: err.message,
+    },
+  ];
+  return {
+    statusCode: httpStatus.BAD_REQUEST,
+    message: 'Validation Error',
+    errorMessages: errors,
+  };
+};
+
 export const ErrorHandler = {
   handleValidationError,
   handleZodError,
+  handleSimplifiedError,
 };

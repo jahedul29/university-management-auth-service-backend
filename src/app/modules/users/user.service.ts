@@ -4,6 +4,7 @@ import {
   IPaginatedResponse,
   IPaginationParams,
 } from '../../../shared/interfaces';
+import { userSearchableFields } from './user.constants';
 import { IUser, IUserFilters } from './user.interface';
 import User from './user.model';
 
@@ -40,7 +41,7 @@ const getAllUsers = async (
   const { searchTerm, ...filterData } = filters;
   const andConditions = [];
   let filterCondition = {};
-  const searchableFields: string[] = ['email'];
+  const searchableFields: string[] = userSearchableFields;
 
   if (searchTerm) {
     andConditions.push({
@@ -82,8 +83,14 @@ const getAllUsers = async (
   };
 };
 
+const getSingleUser = async (id: string): Promise<IUser | null> => {
+  const userData = await User.findById(id);
+  return userData;
+};
+
 export const UserService = {
   getLastUserId,
   saveUserToDb,
   getAllUsers,
+  getSingleUser,
 };

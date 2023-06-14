@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
 import { catchAsync } from '../../../shared/catchAsync';
@@ -47,7 +48,24 @@ const getAllUsers = catchAsync(
   }
 );
 
+const getSingleUser = catchAsync(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id;
+
+    const result = await UserService.getSingleUser(id);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'User retrieved successfully',
+      data: result,
+    });
+  }
+);
+
 export const UserController = {
   createUser,
   getAllUsers,
+  getSingleUser,
 };
