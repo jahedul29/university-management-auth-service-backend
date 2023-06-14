@@ -1,7 +1,7 @@
 import { IAcademicSemester } from './academicSemester.interface';
 import AcademicSemester from './academicSemester.model';
 
-const saveSemesterToDB = async (
+const createSemester = async (
   academicSemester: IAcademicSemester
 ): Promise<IAcademicSemester | null> => {
   const savedData = await AcademicSemester.create(academicSemester);
@@ -9,5 +9,5 @@ const saveSemesterToDB = async (
 };
 
 export const AcademicSemesterService = {
-  saveSemesterToDB,
+  createSemester,
 };

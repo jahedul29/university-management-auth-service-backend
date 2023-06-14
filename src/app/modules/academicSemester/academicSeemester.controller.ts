@@ -17,7 +17,7 @@ const createAcademicSemester: RequestHandler = catchAsync(
       throw new ApiError(httpStatus.BAD_REQUEST, 'Invalid semester code');
     }
 
-    const savedData = await AcademicSemesterService.saveSemesterToDB(
+    const savedData = await AcademicSemesterService.createSemester(
       academicSemeester
     );
 

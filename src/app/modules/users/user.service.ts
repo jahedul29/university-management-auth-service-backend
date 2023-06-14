@@ -1,4 +1,9 @@
-import mongoose from 'mongoose';
+import mongoose, { SortOrder } from 'mongoose';
+import { PaginationHelpers } from '../../../helpers/paginationHelper';
+import {
+  IPaginatedResponse,
+  IPaginationParams,
+} from '../../../shared/interfaces';
 import { IUser } from './user.interface';
 import User from './user.model';
 
@@ -19,7 +24,33 @@ const saveUserToDb = async (user: IUser): Promise<IUser | null> => {
   return savedUser;
 };
 
+const getAllUsers = async (
+  paginationParams: IPaginationParams
+): Promise<IPaginatedResponse<IUser[]>> => {
+  const { page, limit, skip, sortBy, sortOrder } =
+    PaginationHelpers.generatePaginationAndSortFeilds(paginationParams);
+
+  const sortCondition: { [key: string]: SortOrder } = {};
+  if (sortBy && sortBy) {
+    sortCondition[sortBy] = sortOrder;
+  }
+
+  const result = await User.find().sort(sortCondition).skip(skip).limit(limit);
+
+  const total = await User.countDocuments();
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
 export const UserService = {
   getLastUserId,
   saveUserToDb,
+  getAllUsers,
 };

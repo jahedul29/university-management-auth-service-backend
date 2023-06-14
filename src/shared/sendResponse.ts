@@ -5,6 +5,11 @@ type IApiResponse<T> = {
   statusCode: number;
   message: string | null;
   data?: T | null;
+  meta?: {
+    page: number;
+    limit: number;
+    total: number;
+  };
 };
 
 export const sendResponse = <T>(res: Response, data: IApiResponse<T>): void => {
@@ -13,6 +18,7 @@ export const sendResponse = <T>(res: Response, data: IApiResponse<T>): void => {
     statusCode: data.statusCode,
     message: data.message,
     data: data.data || null,
+    meta: data?.meta,
   };
 
   res.status(data.statusCode).json(responseData);
