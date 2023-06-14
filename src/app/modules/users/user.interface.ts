@@ -10,3 +10,7 @@ export type IUser = {
 export type IUserMethods = object;
 
 export type UserModel = Model<IUser, object, IUserMethods>;
+
+export type IUserFilters = {
+  searchTerm?: string;
+};

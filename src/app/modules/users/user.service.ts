@@ -4,7 +4,7 @@ import {
   IPaginatedResponse,
   IPaginationParams,
 } from '../../../shared/interfaces';
-import { IUser } from './user.interface';
+import { IUser, IUserFilters } from './user.interface';
 import User from './user.model';
 
 const getLastUserId = async (): Promise<string> => {
@@ -25,6 +25,7 @@ const saveUserToDb = async (user: IUser): Promise<IUser | null> => {
 };
 
 const getAllUsers = async (
+  filters: IUserFilters,
   paginationParams: IPaginationParams
 ): Promise<IPaginatedResponse<IUser[]>> => {
   const { page, limit, skip, sortBy, sortOrder } =
@@ -35,7 +36,29 @@ const getAllUsers = async (
     sortCondition[sortBy] = sortOrder;
   }
 
-  const result = await User.find().sort(sortCondition).skip(skip).limit(limit);
+  // working on searching
+  const { searchTerm } = filters;
+  const andConditions = [];
+  let filterCondition = {};
+  const searchableFields: string[] = ['email'];
+
+  if (searchTerm) {
+    andConditions.push({
+      $or: searchableFields.map((field: string) => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: 'i',
+        },
+      })),
+    });
+
+    filterCondition = { $and: andConditions };
+  }
+
+  const result = await User.find(filterCondition)
+    .sort(sortCondition)
+    .skip(skip)
+    .limit(limit);
 
   const total = await User.countDocuments();
 

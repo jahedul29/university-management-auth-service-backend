@@ -29,9 +29,10 @@ const createUser = catchAsync(
 const getAllUsers = catchAsync(
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
+    const filters = pickQueryParams(req.query, ['searchTerm']);
     const paginationParams = pickQueryParams(req.query, paginationOptions);
 
-    const result = await UserService.getAllUsers(paginationParams);
+    const result = await UserService.getAllUsers(filters, paginationParams);
 
     sendResponse(res, {
       success: true,
