@@ -8,6 +8,7 @@ import {
 
 const academicSemesterRouter = express.Router();
 
+academicSemesterRouter.get('/', AcademicSemesterController.getAllSemesters);
 academicSemesterRouter.get(
   '/:id',
   AcademicSemesterController.getSingleSemester
