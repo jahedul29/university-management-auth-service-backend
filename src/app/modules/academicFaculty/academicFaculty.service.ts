@@ -4,7 +4,7 @@ import {
   IPaginatedResponse,
   IPaginationParams,
 } from '../../../shared/interfaces';
-import { academicFacultyFilterableFields } from './academicFaculty.constants';
+import { academicFacultySearchableFields } from './academicFaculty.constants';
 import {
   IAcademicFaculty,
   IAcademicFacultyFilters,
@@ -23,7 +23,7 @@ const getAllFaculties = async (
   paginationParams: IPaginationParams
 ): Promise<IPaginatedResponse<IAcademicFaculty[]>> => {
   const { page, limit, skip, sortBy, sortOrder } =
-    PaginationHelpers.generatePaginationAndSortFeilds(paginationParams);
+    PaginationHelpers.generatePaginationAndSortFields(paginationParams);
 
   const sortCondition: { [key: string]: SortOrder } = {};
   if (sortBy && sortBy) {
@@ -34,7 +34,7 @@ const getAllFaculties = async (
   const { searchTerm, ...filterData } = filters;
   const andConditions = [];
   let filterCondition = {};
-  const searchableFields: string[] = academicFacultyFilterableFields;
+  const searchableFields: string[] = academicFacultySearchableFields;
 
   if (searchTerm) {
     andConditions.push({

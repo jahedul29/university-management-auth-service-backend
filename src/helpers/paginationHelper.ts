@@ -8,7 +8,7 @@ type IResult = {
   sortOrder: 'asc' | 'desc';
 };
 
-const generatePaginationAndSortFeilds = (
+const generatePaginationAndSortFields = (
   options: IPaginationParams
 ): IResult => {
   const page = Number(options?.page || 1);
@@ -27,5 +27,5 @@ const generatePaginationAndSortFeilds = (
 };
 
 export const PaginationHelpers = {
-  generatePaginationAndSortFeilds,
+  generatePaginationAndSortFields,
 };

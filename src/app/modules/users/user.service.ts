@@ -30,7 +30,7 @@ const getAllUsers = async (
   paginationParams: IPaginationParams
 ): Promise<IPaginatedResponse<IUser[]>> => {
   const { page, limit, skip, sortBy, sortOrder } =
-    PaginationHelpers.generatePaginationAndSortFeilds(paginationParams);
+    PaginationHelpers.generatePaginationAndSortFields(paginationParams);
 
   const sortCondition: { [key: string]: SortOrder } = {};
   if (sortBy && sortBy) {

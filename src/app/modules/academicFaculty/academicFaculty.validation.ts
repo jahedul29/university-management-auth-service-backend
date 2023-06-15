@@ -8,3 +8,9 @@ export const createAcademicFacultyZodSchema = z.object({
     }),
   }),
 });
+
+export const updateAcademicFacultyZodSchema = z.object({
+  body: z.object({
+    title: z.string().optional(),
+  }),
+});
