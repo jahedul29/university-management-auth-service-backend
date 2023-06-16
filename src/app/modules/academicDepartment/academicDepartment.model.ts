@@ -18,7 +18,12 @@ const academicDepartmentSchema = new Schema<IAcademicDepartment>(
       required: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+  }
 );
 
 academicDepartmentSchema.pre('save', async function (next) {

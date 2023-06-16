@@ -11,7 +11,12 @@ const academicFacultySchema = new Schema<IAcademicFaculty>(
       required: true,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
+  }
 );
 
 const AcademicFaculty = model<IAcademicFaculty, AcademicFacultyModel>(

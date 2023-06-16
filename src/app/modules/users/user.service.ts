@@ -148,7 +148,14 @@ const getAllUsers = async (
 };
 
 const getSingleUser = async (id: string): Promise<IUser | null> => {
-  const userData = await User.findById(id);
+  const userData = await User.findById(id).populate({
+    path: 'student',
+    populate: [
+      { path: 'academicSemester' },
+      { path: 'academicFaculty' },
+      { path: 'academicDepartment' },
+    ],
+  });
   return userData;
 };
 
