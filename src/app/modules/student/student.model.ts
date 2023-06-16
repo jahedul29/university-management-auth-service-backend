@@ -34,6 +34,7 @@ const studentSchema = new Schema<IStudent, IStudentModel>({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   contactNo: {
     type: String,
@@ -121,7 +122,6 @@ const studentSchema = new Schema<IStudent, IStudentModel>({
   },
   profileImage: {
     type: String,
-    required: true,
   },
 });
 

@@ -8,12 +8,12 @@ import { sendResponse } from '../../../shared/sendResponse';
 import { userFilterableFields } from './user.constants';
 import { UserService } from './user.service';
 
-const createUser = catchAsync(
+const createStudent = catchAsync(
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
-    const user = req.body;
+    const { student, ...userData } = req.body;
 
-    const savedUser = await UserService.createUser(user);
+    const savedUser = await UserService.createStudent(student, userData);
 
     sendResponse(res, {
       success: true,
@@ -61,7 +61,7 @@ const getSingleUser = catchAsync(
 );
 
 export const UserController = {
-  createUser,
+  createStudent,
   getAllUsers,
   getSingleUser,
 };

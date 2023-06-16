@@ -8,9 +8,9 @@ const userRouter = express.Router();
 userRouter.get('/', UserController.getAllUsers);
 userRouter.get('/:id', UserController.getSingleUser);
 userRouter.post(
-  '/create-user',
+  '/create-student',
   validateRequest(createUserZodSchema),
-  UserController.createUser
+  UserController.createStudent
 );
 
 export const UserRouters = userRouter;

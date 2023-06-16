@@ -17,7 +17,7 @@ const closeServer = () => {
 };
 
 process.on('uncaughtException', err => {
-  errorLogger.error(err);
+  errorLogger.error(`UncaughtException occured ${err}`);
   process.exit(1);
 });
 
@@ -34,7 +34,7 @@ async function bootstrap() {
   }
 
   process.on('unhandledRejection', async function (error) {
-    errorLogger.error(error);
+    errorLogger.error(`unhandledRejection occured ${error}`);
     closeServer();
   });
 }

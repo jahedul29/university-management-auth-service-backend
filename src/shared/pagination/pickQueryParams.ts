@@ -7,6 +7,8 @@ export const pickQueryParams = <
 ): Partial<T> => {
   const finalObject: Partial<T> = {};
 
+  console.log({ keys });
+
   for (const key of keys) {
     if (obj && Object.hasOwnProperty.call(obj, key)) {
       finalObject[key] = obj[key];

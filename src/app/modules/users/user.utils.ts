@@ -16,7 +16,6 @@ export const generateStudentId = async (
   const studentId = `${academicSemester.year.substring(2)}${
     academicSemester.code
   }${newRoll.toString().padStart(5, '0')}`;
-  console.log({ newRoll, currentId });
   return studentId;
 };
 

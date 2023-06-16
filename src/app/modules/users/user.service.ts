@@ -1,21 +1,92 @@
-import { SortOrder } from 'mongoose';
+import httpStatus from 'http-status';
+import mongoose, { SortOrder } from 'mongoose';
+import config from '../../../config';
 import { PaginationHelpers } from '../../../helpers/paginationHelper';
+import { UserRoles } from '../../../shared/enums';
+import { ApiError } from '../../../shared/errors/errors.clsses';
 import {
   IPaginatedResponse,
   IPaginationParams,
 } from '../../../shared/interfaces';
+import AcademicSemester from '../academicSemester/academicSemester.model';
+import { IStudent } from '../student/student.interface';
+import { Student } from '../student/student.model';
 import { userSearchableFields } from './user.constants';
 import { IUser, IUserFilters } from './user.interface';
 import User from './user.model';
-import { generateFacultyId } from './user.utils';
+import { generateStudentId } from './user.utils';
 
-const createUser = async (user: IUser): Promise<IUser | null> => {
-  // user.id = await generateStudentId({ year: '2025', code: '01' });
-  user.id = await generateFacultyId();
-  user.password = user.id;
+const createStudent = async (
+  student: IStudent,
+  user: IUser
+): Promise<IUser | null> => {
+  user.role = UserRoles.STUDENT;
 
-  const savedUser = await User.create(user);
-  return savedUser;
+  if (!user?.password) {
+    user.password = config.default_student_password as string;
+  }
+
+  let finalUser = null;
+  const session = await mongoose.startSession();
+  try {
+    await session.startTransaction();
+    const academicSemester = await AcademicSemester.findById(
+      student.academicSemester
+    );
+
+    if (!academicSemester) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'academic semester not found');
+    }
+
+    const generatedId = await generateStudentId(academicSemester);
+    user.id = generatedId;
+    student.id = generatedId;
+
+    if (!generatedId) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to get id');
+    }
+
+    const savedStudent = await Student.create([student], { session });
+
+    if (!savedStudent.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create student');
+    }
+
+    user.student = savedStudent[0]._id;
+    const savedUser = await User.create([user], { session });
+
+    if (!savedUser.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user');
+    }
+
+    finalUser = savedUser[0];
+
+    await session.commitTransaction();
+    await session.endSession();
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
+  }
+
+  if (finalUser) {
+    finalUser = await User.findOne({ id: finalUser.id }).populate({
+      path: 'student',
+      populate: [
+        {
+          path: 'academicSemester',
+        },
+        {
+          path: 'academicFaculty',
+        },
+        {
+          path: 'academicDepartment',
+        },
+      ],
+    });
+  }
+
+  return finalUser;
 };
 
 const getAllUsers = async (
@@ -82,7 +153,7 @@ const getSingleUser = async (id: string): Promise<IUser | null> => {
 };
 
 export const UserService = {
-  createUser,
+  createStudent,
   getAllUsers,
   getSingleUser,
 };

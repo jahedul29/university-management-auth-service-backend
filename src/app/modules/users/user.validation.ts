@@ -28,69 +28,68 @@ export const createUserZodSchema = z.object({
         .email({
           message: 'Invalid email address',
         }),
-    }),
-    dateOfBirth: z.string({
-      required_error: 'dateOfBirth is required',
-    }),
-    contactNo: z.string({
-      required_error: 'contactNo is required',
-    }),
-    emergencyContactNo: z.string({
-      required_error: 'emergencyContactNo is required',
-    }),
-    bloodGroup: z.enum([...bloodGroupList] as [string, ...string[]]).optional(),
-    presentAddress: z.string({
-      required_error: 'presentAddress is required',
-    }),
-    permanentAddress: z.string({
-      required_error: 'permanentAddress is required',
-    }),
-    guardian: z.object({
-      fatherName: z.string({
-        required_error: 'fatherName is required',
-      }),
-      fatherContactNo: z.string({
-        required_error: 'fatherContactNo is required',
-      }),
-      fatherOccupation: z.string({
-        required_error: 'fatherOccupation is required',
-      }),
-      motherName: z.string({
-        required_error: 'motherName is required',
-      }),
-      motherContactNo: z.string({
-        required_error: 'motherContactNo is required',
-      }),
-      motherOccupation: z.string({
-        required_error: 'motherOccupation is required',
-      }),
-      address: z.string({
-        required_error: 'address is required',
-      }),
-    }),
-    localGuardian: z.object({
-      name: z.string({
-        required_error: 'name is required',
-      }),
       contactNo: z.string({
         required_error: 'contactNo is required',
       }),
-      occupation: z.string({
-        required_error: 'occupation is required',
+      emergencyContactNo: z.string({
+        required_error: 'emergencyContactNo is required',
       }),
-      address: z.string({
-        required_error: 'address is required',
+      bloodGroup: z
+        .enum([...bloodGroupList] as [string, ...string[]])
+        .optional(),
+      presentAddress: z.string({
+        required_error: 'presentAddress is required',
       }),
+      permanentAddress: z.string({
+        required_error: 'permanentAddress is required',
+      }),
+      guardian: z.object({
+        fatherName: z.string({
+          required_error: 'fatherName is required',
+        }),
+        fatherContactNo: z.string({
+          required_error: 'fatherContactNo is required',
+        }),
+        fatherOccupation: z.string({
+          required_error: 'fatherOccupation is required',
+        }),
+        motherName: z.string({
+          required_error: 'motherName is required',
+        }),
+        motherContactNo: z.string({
+          required_error: 'motherContactNo is required',
+        }),
+        motherOccupation: z.string({
+          required_error: 'motherOccupation is required',
+        }),
+        address: z.string({
+          required_error: 'address is required',
+        }),
+      }),
+      localGuardian: z.object({
+        name: z.string({
+          required_error: 'name is required',
+        }),
+        contactNo: z.string({
+          required_error: 'contactNo is required',
+        }),
+        occupation: z.string({
+          required_error: 'occupation is required',
+        }),
+        address: z.string({
+          required_error: 'address is required',
+        }),
+      }),
+      academicFaculty: z.string({
+        required_error: 'academicFaculty is required',
+      }),
+      academicSemester: z.string({
+        required_error: 'academicSemester is required',
+      }),
+      academicDepartment: z.string({
+        required_error: 'academicDepartment is required',
+      }),
+      profileImage: z.string().optional(),
     }),
-    academicFaculty: z.string({
-      required_error: 'academicFaculty is required',
-    }),
-    academicSemester: z.string({
-      required_error: 'academicSemester is required',
-    }),
-    academicDepartment: z.string({
-      required_error: 'academicDepartment is required',
-    }),
-    profileImage: z.string().optional(),
   }),
 });
