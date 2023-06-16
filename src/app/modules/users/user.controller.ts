@@ -7,15 +7,13 @@ import { pickQueryParams } from '../../../shared/pagination/pickQueryParams';
 import { sendResponse } from '../../../shared/sendResponse';
 import { userFilterableFields } from './user.constants';
 import { UserService } from './user.service';
-import { generateUserId } from './user.utils';
 
 const createUser = catchAsync(
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
     const user = req.body;
-    user.password = user.email;
-    const lastUserId = await UserService.getLastUserId();
-    user.id = generateUserId(lastUserId, user.role);
-    const savedUser = await UserService.saveUserToDb(user);
+
+    const savedUser = await UserService.createUser(user);
 
     sendResponse(res, {
       success: true,
@@ -23,8 +21,6 @@ const createUser = catchAsync(
       message: 'User saved successfully',
       data: savedUser,
     });
-
-    next();
   }
 );
 
