@@ -131,6 +131,7 @@ const getAllUsers = async (
   }
 
   const result = await User.find(filterCondition)
+    .populate('student')
     .sort(sortCondition)
     .skip(skip)
     .limit(limit);
