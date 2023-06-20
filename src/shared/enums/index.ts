@@ -5,3 +5,13 @@ export enum UserRoles {
   STUDENT = 'student',
   FACULTY = 'faculty',
 }
+
+export enum FacultyDesignations {
+  CHAIRMAN = 'chairman',
+  PROFESSOR = 'professor',
+  LECTURER = 'lecturer',
+  COORDINATOR = 'coordinator',
+  ASSOCIATE_PROFESSOR = 'associate professor',
+  ASSISTANT_PROFESSOR = 'assistant professor',
+  ADJUNCT = 'adjunct',
+}

@@ -30,6 +30,5 @@ export const generateFacultyId = async (): Promise<string> => {
   const currentId = await getLastFacultyId();
   const newRoll = currentId ? parseInt(currentId) + 1 : 1;
   const facultyId = `F-${newRoll.toString().padStart(5, '0')}`;
-  console.log({ newRoll, currentId });
   return facultyId;
 };

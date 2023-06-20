@@ -115,11 +115,11 @@ const studentSchema = new Schema<IStudent, IStudentModel>(
     },
     academicSemester: {
       type: Schema.Types.ObjectId,
-      ref: 'AcademicFaculty',
+      ref: 'AcademicSemester',
     },
     academicDepartment: {
       type: Schema.Types.ObjectId,
-      ref: 'AcademicFaculty',
+      ref: 'AcademicDepartment',
     },
     profileImage: {
       type: String,

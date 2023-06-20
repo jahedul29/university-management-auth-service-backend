@@ -24,6 +24,22 @@ const createStudent = catchAsync(
   }
 );
 
+const createFaculty = catchAsync(
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { faculty, ...userData } = req.body;
+
+    const savedUser = await UserService.createFaculty(faculty, userData);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Faculty saved successfully',
+      data: savedUser,
+    });
+  }
+);
+
 const getAllUsers = catchAsync(
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   async (req: Request, res: Response, next: NextFunction) => {
@@ -62,6 +78,7 @@ const getSingleUser = catchAsync(
 
 export const UserController = {
   createStudent,
+  createFaculty,
   getAllUsers,
   getSingleUser,
 };

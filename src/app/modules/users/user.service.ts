@@ -9,12 +9,14 @@ import {
   IPaginationParams,
 } from '../../../shared/interfaces';
 import AcademicSemester from '../academicSemester/academicSemester.model';
+import { IFaculty } from '../faculty/faculty.interface';
+import { Faculty } from '../faculty/faculty.model';
 import { IStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { userSearchableFields } from './user.constants';
 import { IUser, IUserFilters } from './user.interface';
 import User from './user.model';
-import { generateStudentId } from './user.utils';
+import { generateFacultyId, generateStudentId } from './user.utils';
 
 const createStudent = async (
   student: IStudent,
@@ -89,6 +91,69 @@ const createStudent = async (
   return finalUser;
 };
 
+const createFaculty = async (
+  faculty: IFaculty,
+  user: IUser
+): Promise<IUser | null> => {
+  user.role = UserRoles.FACULTY;
+
+  if (!user?.password) {
+    user.password = config.default_faculty_password as string;
+  }
+
+  let finalUser = null;
+  const session = await mongoose.startSession();
+  try {
+    await session.startTransaction();
+
+    const generatedId = await generateFacultyId();
+    user.id = generatedId;
+    faculty.id = generatedId;
+
+    if (!generatedId) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to get id');
+    }
+
+    const savedFaculty = await Faculty.create([faculty], { session });
+
+    if (!savedFaculty.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create faculty');
+    }
+
+    user.faculty = savedFaculty[0]._id;
+    const savedUser = await User.create([user], { session });
+
+    if (!savedUser.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user');
+    }
+
+    finalUser = savedUser[0];
+
+    await session.commitTransaction();
+    await session.endSession();
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
+  }
+
+  if (finalUser) {
+    finalUser = await User.findOne({ id: finalUser.id }).populate({
+      path: 'faculty',
+      populate: [
+        {
+          path: 'academicFaculty',
+        },
+        {
+          path: 'academicDepartment',
+        },
+      ],
+    });
+  }
+
+  return finalUser;
+};
+
 const getAllUsers = async (
   filters: IUserFilters,
   paginationParams: IPaginationParams
@@ -131,7 +196,18 @@ const getAllUsers = async (
   }
 
   const result = await User.find(filterCondition)
-    .populate('student')
+    .populate({
+      path: 'student',
+      populate: [
+        { path: 'academicSemester' },
+        { path: 'academicFaculty' },
+        { path: 'academicDepartment' },
+      ],
+    })
+    .populate({
+      path: 'faculty',
+      populate: [{ path: 'name' }],
+    })
     .sort(sortCondition)
     .skip(skip)
     .limit(limit);
@@ -149,19 +225,25 @@ const getAllUsers = async (
 };
 
 const getSingleUser = async (id: string): Promise<IUser | null> => {
-  const userData = await User.findById(id).populate({
-    path: 'student',
-    populate: [
-      { path: 'academicSemester' },
-      { path: 'academicFaculty' },
-      { path: 'academicDepartment' },
-    ],
-  });
+  const userData = await User.findById(id)
+    .populate({
+      path: 'student',
+      populate: [
+        { path: 'academicSemester' },
+        { path: 'academicFaculty' },
+        { path: 'academicDepartment' },
+      ],
+    })
+    .populate({
+      path: 'faculty',
+      populate: [{ path: 'name' }],
+    });
   return userData;
 };
 
 export const UserService = {
   createStudent,
+  createFaculty,
   getAllUsers,
   getSingleUser,
 };
