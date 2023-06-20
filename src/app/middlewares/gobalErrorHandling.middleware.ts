@@ -40,6 +40,17 @@ export const globalErrorHandling: ErrorRequestHandler = (
     message = simplifiedError.message;
     errorMessages = simplifiedError.errorMessages;
     // res.status(200).json(err);
+  } else if (err instanceof ApiError) {
+    statusCode = err.statusCode;
+    message = err.message;
+    errorMessages = err.message
+      ? [
+          {
+            path: '',
+            message: err.message,
+          },
+        ]
+      : [];
   } else if (err instanceof Error) {
     message = err.message;
     errorMessages = [
@@ -48,17 +59,6 @@ export const globalErrorHandling: ErrorRequestHandler = (
         message: err?.message,
       },
     ];
-  } else if (err instanceof ApiError) {
-    statusCode = err?.statusCode;
-    message = err?.message;
-    errorMessages = err?.message
-      ? [
-          {
-            path: '',
-            message: err?.message,
-          },
-        ]
-      : [];
   }
 
   res.status(statusCode).json({

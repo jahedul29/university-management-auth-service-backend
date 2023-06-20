@@ -1,7 +1,9 @@
+import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
-import { IUser, UserModel } from './user.interface';
+import config from '../../../config';
+import { IUser, IUserMethods, UserModel } from './user.interface';
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUser, UserModel, IUserMethods>(
   {
     id: {
       type: String,
@@ -15,6 +17,11 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+      select: 0,
+    },
+    needPasswordChange: {
+      type: Boolean,
+      default: true,
     },
     student: {
       type: Schema.Types.ObjectId,
@@ -28,17 +35,6 @@ const userSchema = new Schema<IUser>(
       type: Schema.Types.ObjectId,
       ref: 'Admin',
     },
-    // email: {
-    //   type: String,
-    //   required: true,
-    //   unique: true,
-    //   validate: {
-    //     validator: function (value: string) {
-    //       return /^[\w-]+(\.[w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(value);
-    //     },
-    //     message: 'Invalid email format',
-    //   },
-    // },
   },
   {
     timestamps: true,
@@ -47,6 +43,32 @@ const userSchema = new Schema<IUser>(
     },
   }
 );
+
+userSchema.statics.isUserExist = async function (
+  id: string
+): Promise<Pick<IUser, 'id' | 'password' | 'needPasswordChange'> | null> {
+  return await User.findOne(
+    { id },
+    { id: 1, password: 1, needPasswordChange: 1 }
+  );
+};
+
+userSchema.statics.isPasswordMatch = async function (
+  givenPassword: string,
+  userPassword: string
+): Promise<boolean> {
+  return await bcrypt.compare(givenPassword, userPassword);
+};
+
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds)
+  );
+  next();
+});
 
 const User = model<IUser, UserModel>('User', userSchema);
 

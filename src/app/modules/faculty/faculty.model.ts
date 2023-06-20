@@ -37,6 +37,12 @@ const facultySchema = new Schema<IFaculty, IFacultyModel>(
       type: String,
       required: true,
       unique: true,
+      validate: {
+        validator: function (value: string) {
+          return /^[\w-]+(\.[w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(value);
+        },
+        message: 'Invalid email format',
+      },
     },
     contactNo: {
       type: String,
