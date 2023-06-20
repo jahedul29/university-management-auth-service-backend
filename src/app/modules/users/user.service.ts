@@ -9,6 +9,8 @@ import {
   IPaginationParams,
 } from '../../../shared/interfaces';
 import AcademicSemester from '../academicSemester/academicSemester.model';
+import { IAdmin } from '../admin/admin.interface';
+import { Admin } from '../admin/admin.model';
 import { IFaculty } from '../faculty/faculty.interface';
 import { Faculty } from '../faculty/faculty.model';
 import { IStudent } from '../student/student.interface';
@@ -16,7 +18,11 @@ import { Student } from '../student/student.model';
 import { userSearchableFields } from './user.constants';
 import { IUser, IUserFilters } from './user.interface';
 import User from './user.model';
-import { generateFacultyId, generateStudentId } from './user.utils';
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentId,
+} from './user.utils';
 
 const createStudent = async (
   student: IStudent,
@@ -154,6 +160,66 @@ const createFaculty = async (
   return finalUser;
 };
 
+const createAdmin = async (
+  admin: IAdmin,
+  user: IUser
+): Promise<IUser | null> => {
+  user.role = UserRoles.ADMIN;
+
+  if (!user?.password) {
+    user.password = config.default_admin_password as string;
+  }
+
+  let finalUser = null;
+  const session = await mongoose.startSession();
+  try {
+    await session.startTransaction();
+
+    const generatedId = await generateAdminId();
+    user.id = generatedId;
+    admin.id = generatedId;
+
+    if (!generatedId) {
+      throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to get id');
+    }
+
+    const savedAdmin = await Admin.create([admin], { session });
+
+    if (!savedAdmin.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create admin');
+    }
+
+    user.admin = savedAdmin[0]._id;
+    const savedUser = await User.create([user], { session });
+
+    if (!savedUser.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user');
+    }
+
+    finalUser = savedUser[0];
+
+    await session.commitTransaction();
+    await session.endSession();
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
+  }
+
+  if (finalUser) {
+    finalUser = await User.findOne({ id: finalUser.id }).populate({
+      path: 'admin',
+      populate: [
+        {
+          path: 'managementDepartment',
+        },
+      ],
+    });
+  }
+
+  return finalUser;
+};
+
 const getAllUsers = async (
   filters: IUserFilters,
   paginationParams: IPaginationParams
@@ -244,6 +310,7 @@ const getSingleUser = async (id: string): Promise<IUser | null> => {
 export const UserService = {
   createStudent,
   createFaculty,
+  createAdmin,
   getAllUsers,
   getSingleUser,
 };

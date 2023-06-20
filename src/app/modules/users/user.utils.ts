@@ -32,3 +32,17 @@ export const generateFacultyId = async (): Promise<string> => {
   const facultyId = `F-${newRoll.toString().padStart(5, '0')}`;
   return facultyId;
 };
+
+const getLastAdminId = async (): Promise<string | undefined> => {
+  const lastAdmin = await User.findOne({ role: 'admin' })
+    .sort({ createdAt: -1 })
+    .lean();
+  return lastAdmin?.id ? lastAdmin.id.substring(2) : undefined;
+};
+
+export const generateAdminId = async (): Promise<string> => {
+  const currentId = await getLastAdminId();
+  const newRoll = currentId ? parseInt(currentId) + 1 : 1;
+  const adminId = `A-${newRoll.toString().padStart(5, '0')}`;
+  return adminId;
+};
