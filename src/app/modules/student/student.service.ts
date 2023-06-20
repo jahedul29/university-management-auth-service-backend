@@ -78,9 +78,41 @@ const updateStudent = async (
   id: string,
   payload: Partial<IStudent>
 ): Promise<IStudent | null> => {
-  const result = await Student.findOneAndUpdate({ _id: id }, payload, {
-    new: true,
-  });
+  const { name, guardian, localGuardian, ...studentData } = payload;
+
+  const updatedStudentData = studentData;
+
+  if (name && Object.keys(name).length > 0) {
+    Object.keys(name).forEach(key => {
+      const keyName = `name.${key}`;
+      (updatedStudentData as any)[keyName] = name[key as keyof typeof name];
+    });
+  }
+
+  if (guardian && Object.keys(guardian).length > 0) {
+    Object.keys(guardian).forEach(key => {
+      const keyName = `guardian.${key}`;
+      (updatedStudentData as any)[keyName] =
+        guardian[key as keyof typeof guardian];
+    });
+  }
+
+  if (localGuardian && Object.keys(localGuardian).length > 0) {
+    Object.keys(localGuardian).forEach(key => {
+      const keyName = `guardian.${key}`;
+      (updatedStudentData as any)[keyName] =
+        localGuardian[key as keyof typeof localGuardian];
+    });
+  }
+
+  const result = await Student.findOneAndUpdate(
+    { _id: id },
+    updatedStudentData,
+    {
+      new: true,
+    }
+  );
+
   return result;
 };
 
