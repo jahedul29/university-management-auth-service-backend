@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
@@ -12,6 +13,7 @@ app.use(cors());
 // parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 app.get('/api/v1', async (req: Request, res: Response, next: NextFunction) => {
