@@ -29,6 +29,7 @@ const createStudent = async (
   user: IUser
 ): Promise<IUser | null> => {
   user.role = UserRoles.STUDENT;
+  user.needPasswordChange = true;
 
   if (!user?.password) {
     user.password = config.default_student_password as string;
@@ -102,6 +103,7 @@ const createFaculty = async (
   user: IUser
 ): Promise<IUser | null> => {
   user.role = UserRoles.FACULTY;
+  user.needPasswordChange = true;
 
   if (!user?.password) {
     user.password = config.default_faculty_password as string;
@@ -165,6 +167,7 @@ const createAdmin = async (
   user: IUser
 ): Promise<IUser | null> => {
   user.role = UserRoles.ADMIN;
+  user.needPasswordChange = true;
 
   if (!user?.password) {
     user.password = config.default_admin_password as string;

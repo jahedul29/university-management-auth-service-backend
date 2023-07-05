@@ -53,7 +53,25 @@ const refreshToken = catchAsync(
   }
 );
 
+const changePassword = catchAsync(
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  async (req: Request, res: Response, next: NextFunction) => {
+    const loginData = req.body;
+    const user = req.user;
+
+    await AuthService.changePassword(user, loginData);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Password changed in successfully',
+      data: null,
+    });
+  }
+);
+
 export const AuthController = {
   login,
   refreshToken,
+  changePassword,
 };
